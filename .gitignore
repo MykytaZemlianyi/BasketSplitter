@@ -1,2 +1,5 @@
 basket-1.json
 basket-2.json
+/target/
+*.class
+/config/application.properties
