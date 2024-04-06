@@ -13,15 +13,19 @@ import jakarta.json.JsonReader;
 
 public class BasketSplitter {
 	private String absolutePathToConfigFile;
-	private Map<String, List<String>> config;
+	private static Map<String, List<String>> config;
 
 	public BasketSplitter(String absolutePathToConfigFile) {
 		this.absolutePathToConfigFile = absolutePathToConfigFile;
-		this.config = setConfig();
+		BasketSplitter.config = setConfig();
 	}
 
-	public Map<String, List<String>> getConfig() {
-		return config;
+	public static Map<String, List<String>> getConfig() {
+		if (config != null) {
+			return config;
+		} else {
+			throw new IllegalStateException("Config is not initialized");
+		}
 	}
 
 	public String getAbsolutePathToConfigFile() {
@@ -35,26 +39,6 @@ public class BasketSplitter {
 	public Map<String, List<String>> split(List<String> items) {
 
 		return null;
-	}
-
-	// Find the keys that match the Item table in the config map and if they are not
-	// already in the map, add them there and add the item as a value anyway.
-	public Map<String, List<String>> createDeliveryMap(List<String> items) {
-		Map<String, List<String>> deliveryMap = new HashMap<>();
-
-		for (String item : items) {
-			List<String> deliveryMethods = getConfig().get(item);
-
-			if (deliveryMethods != null) {
-				for (String deliveryMethod : deliveryMethods) {
-					if (!deliveryMap.containsKey(deliveryMethod)) {
-						deliveryMap.put(deliveryMethod, new ArrayList<>());
-					}
-					deliveryMap.get(deliveryMethod).add(item);
-				}
-			}
-		}
-		return deliveryMap;
 	}
 
 	/*
