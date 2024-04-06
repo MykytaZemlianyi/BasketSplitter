@@ -14,6 +14,7 @@ class DeliveryMapManagerTest {
 	private List<String> itemList;
 
 	private Map<String, List<String>> deliveryMap;
+	private Map<String, List<String>> config;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -21,6 +22,8 @@ class DeliveryMapManagerTest {
 
 		new BasketSplitter(absolutePathToConfigFile);
 		new DeliveryMapManager();
+
+		config = BasketSplitter.getConfig();
 
 		// Initialize itemList1
 		itemList = new ArrayList<>();
@@ -35,7 +38,7 @@ class DeliveryMapManagerTest {
 
 	@Test
 	public void testCreateDeliveryMap() {
-		deliveryMap = DeliveryMapManager.createDeliveryMap(itemList);
+		deliveryMap = DeliveryMapManager.createDeliveryMap(itemList, config);
 
 		assertTrue(deliveryMap.containsKey("Next day shipping"));
 
@@ -73,7 +76,7 @@ class DeliveryMapManagerTest {
 		expectedDeliveryMap.add("Next day shipping");
 
 		List<String> actualDeliveryMap = DeliveryMapManager
-				.createSortedDeliveryMapKeysList(DeliveryMapManager.createDeliveryMap(itemList));
+				.createSortedDeliveryMapKeysList(DeliveryMapManager.createDeliveryMap(itemList, config));
 
 		assertEquals(expectedDeliveryMap, actualDeliveryMap);
 
@@ -96,9 +99,9 @@ class DeliveryMapManagerTest {
 		mailboxDeliveryList.add("Fond - Chocolate");
 		expectedMap.put("Mailbox delivery", mailboxDeliveryList);
 
-		deliveryMap = DeliveryMapManager.createDeliveryMap(itemList);
+		deliveryMap = DeliveryMapManager.createDeliveryMap(itemList, config);
 		List<String> sortedKeys1 = DeliveryMapManager.createSortedDeliveryMapKeysList(deliveryMap);
-		Map<String, List<String>> filteredDeliveryMap = DeliveryMapManager.filterDeliveryMap(deliveryMap, sortedKeys1);
+		Map<String, List<String>> filteredDeliveryMap = DeliveryMapManager.filterDeliveryMap(deliveryMap);
 
 		assertAll("Check filtered map", () -> assertEquals(expectedMap.size(), filteredDeliveryMap.size()), () -> {
 			for (String key : expectedMap.keySet()) {

@@ -20,7 +20,7 @@ public class BasketSplitter {
 		BasketSplitter.config = setConfig();
 	}
 
-	public static Map<String, List<String>> getConfig() {
+	static Map<String, List<String>> getConfig() {
 		if (config != null) {
 			return config;
 		} else {
@@ -28,24 +28,23 @@ public class BasketSplitter {
 		}
 	}
 
-	public String getAbsolutePathToConfigFile() {
+	private String getAbsolutePathToConfigFile() {
 		return absolutePathToConfigFile;
 	}
 
-	public void setAbsolutePathToConfigFile(String absolutePathToConfigFile) {
-		this.absolutePathToConfigFile = absolutePathToConfigFile;
-	}
-
 	public Map<String, List<String>> split(List<String> items) {
+		List<String> itemList = items;
+		Map<String, List<String>> config = getConfig();
+		Map<String, List<String>> deliveryMap = DeliveryMapManager.createDeliveryMap(itemList, config);
 
-		return null;
+		return DeliveryMapManager.filterDeliveryMap(deliveryMap);
 	}
 
 	/*
 	 * This method reads a JSON configuration file, converts its contents into a
 	 * Map<String, List<String>> object and returns it.
 	 */
-	public Map<String, List<String>> setConfig() {
+	Map<String, List<String>> setConfig() {
 
 		Map<String, List<String>> config = new HashMap<>();
 

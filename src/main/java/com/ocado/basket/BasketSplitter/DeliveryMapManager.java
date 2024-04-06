@@ -9,11 +9,11 @@ public class DeliveryMapManager {
 
 //Find the keys that match the Item table in the config map and if they are not
 	// already in the map, add them there and add the item as a value anyway.
-	public static Map<String, List<String>> createDeliveryMap(List<String> items) {
+	public static Map<String, List<String>> createDeliveryMap(List<String> items, Map<String, List<String>> config) {
 		Map<String, List<String>> deliveryMap = new HashMap<>();
 
 		for (String item : items) {
-			List<String> deliveryMethods = BasketSplitter.getConfig().get(item);
+			List<String> deliveryMethods = config.get(item);
 
 			if (deliveryMethods != null) {
 				for (String deliveryMethod : deliveryMethods) {
@@ -43,9 +43,13 @@ public class DeliveryMapManager {
 		return sortedKeys;
 	}
 
-	public static Map<String, List<String>> filterDeliveryMap(Map<String, List<String>> deliveryMap,
-			List<String> sortedKeys) {
-
+	/*
+	 * This method filters the main delivery map by maximizing the number of items
+	 * in 1 delivery method while minimizing the total number of deliveries
+	 */
+	public static Map<String, List<String>> filterDeliveryMap(Map<String, List<String>> deliveryMap) {
+		
+		List<String> sortedKeys = createSortedDeliveryMapKeysList(deliveryMap);
 		for (int i = sortedKeys.size() - 1; i >= 0; i--) {
 
 			String currentKey = sortedKeys.get(i);
