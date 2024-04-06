@@ -37,6 +37,8 @@ public class BasketSplitter {
 		return null;
 	}
 
+	// Find the keys that match the Item table in the config map and if they are not
+	// already in the map, add them there and add the item as a value anyway.
 	public Map<String, List<String>> createDeliveryMap(List<String> items) {
 		Map<String, List<String>> deliveryMap = new HashMap<>();
 
@@ -46,18 +48,19 @@ public class BasketSplitter {
 			if (deliveryMethods != null) {
 				for (String deliveryMethod : deliveryMethods) {
 					if (!deliveryMap.containsKey(deliveryMethod)) {
-						// Создаем новый список для данного способа доставки
 						deliveryMap.put(deliveryMethod, new ArrayList<>());
 					}
-					// Добавляем товар в список для данного способа доставки
 					deliveryMap.get(deliveryMethod).add(item);
 				}
 			}
 		}
-
 		return deliveryMap;
 	}
 
+	/*
+	 * This method reads a JSON configuration file, converts its contents into a
+	 * Map<String, List<String>> object and returns it.
+	 */
 	public Map<String, List<String>> setConfig() {
 
 		Map<String, List<String>> config = new HashMap<>();
