@@ -29,7 +29,7 @@ public class DeliveryMapManager {
 
 	// The method returns the list of keys sorted by descending number of items in
 	// each key
-	public static List<String> sortDeliveryMapKeys(Map<String, List<String>> deliveryMap) {
+	public static List<String> createSortedDeliveryMapKeysList(Map<String, List<String>> deliveryMap) {
 
 		List<Map.Entry<String, List<String>>> SortedDeliveryMap = new ArrayList<>(deliveryMap.entrySet());
 
@@ -41,6 +41,44 @@ public class DeliveryMapManager {
 		}
 
 		return sortedKeys;
+	}
+
+	public static Map<String, List<String>> filterDeliveryMap(Map<String, List<String>> deliveryMap,
+			List<String> sortedKeys) {
+
+		for (int i = sortedKeys.size() - 1; i >= 0; i--) {
+
+			String currentKey = sortedKeys.get(i);
+			List<String> currentItems = deliveryMap.get(currentKey);
+
+			if (currentItems != null && !currentItems.isEmpty()) {
+
+				for (int j = 0; j < i; j++) {
+					String largerKey = sortedKeys.get(j);
+					List<String> largerItems = deliveryMap.get(largerKey);
+
+					if (largerItems != null && !largerItems.isEmpty()) {
+						// Create a copy of the list of items in the current key to avoid
+						// ConcurrentModificationException
+						List<String> copyOfCurrentItems = new ArrayList<>(currentItems);
+
+						for (String item : copyOfCurrentItems) {
+							if (largerItems.contains(item)) {
+								currentItems.remove(item);
+							}
+						}
+					} else
+						deliveryMap.remove(largerKey);
+				}
+
+				if (currentItems.isEmpty()) {
+					deliveryMap.remove(currentKey);
+				}
+			} else
+				deliveryMap.remove(currentKey);
+		}
+
+		return deliveryMap;
 	}
 
 }
