@@ -23,7 +23,7 @@ public class BasketSplitterTest {
 	@Test
 	public void testSetConfig() {
 
-		Map<String, List<String>> config = basketSplitter.setConfig();
+		Map<String, List<String>> config = basketSplitter.setConfigReflector();
 
 		assertTrue(!config.isEmpty());
 
